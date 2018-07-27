@@ -1,5 +1,19 @@
 # Web SDK Change Log
 
+## 3.4.7
+
+Fixes aimed at websocket stability:
+
+* Changes exponential backoff for websocket reconnect and Replaying of missed events to start at a higher interval
+* Adds client events for debugging:
+  * websocket:connecting
+  * websocket:disconnecting
+  * websocket:replaying-events
+  * websocket:scheduling-reconnect
+  * websocket:schedule-reconnect
+  * websocket:ignore-skipped-counter
+* If multiple anomolies in a websocket connection will not attempt recovery until frequency of such errors is less than once per minute
+
 ## 3.4.6
 
 * Fixes missed case for release `v3.4.5`

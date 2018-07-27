@@ -119,7 +119,9 @@ class OnlineStateManager extends Root {
     // If this is called while we are offline, we're doing exponential backoff pinging the server to see if we've come back online.
     else {
       logger.info('OnlineStateManager: Scheduled checkOnlineStatus');
-      const duration = Utils.getExponentialBackoffSeconds(this.maxOfflineWait, Math.min(10, this.offlineCounter++));
+      const backoffCounter = Math.min(10, this.offlineCounter + 3);
+      this.offlineCounter++;
+      const duration = Utils.getExponentialBackoffSeconds(this.maxOfflineWait, backoffCounter);
       this.onlineCheckId = setTimeout(this.checkOnlineStatus.bind(this, callback), Math.floor(duration * 1000));
     }
   }

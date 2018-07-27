@@ -250,7 +250,7 @@ describe("The OnlineStateManager Class", function() {
             // Posttest
             jasmine.clock().tick(2);
             expect(manager.checkOnlineStatus).toHaveBeenCalled();
-            expect(layer.Util.getExponentialBackoffSeconds).toHaveBeenCalledWith(manager.maxOfflineWait, 0);
+            expect(layer.Util.getExponentialBackoffSeconds).toHaveBeenCalledWith(manager.maxOfflineWait, 3);
 
             // Restore
             layer.Util.getExponentialBackoffSeconds = tmp;
@@ -270,7 +270,7 @@ describe("The OnlineStateManager Class", function() {
             // Posttest
             jasmine.clock().tick(2);
             expect(manager.checkOnlineStatus).toHaveBeenCalled();
-            expect(layer.Util.getExponentialBackoffSeconds).toHaveBeenCalledWith(manager.maxOfflineWait, 0);
+            expect(layer.Util.getExponentialBackoffSeconds).toHaveBeenCalledWith(manager.maxOfflineWait, 3);
 
             // Restore
             layer.Util.getExponentialBackoffSeconds = tmp;

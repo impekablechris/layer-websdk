@@ -766,7 +766,6 @@ describe("The Websocket Socket Manager Class", function() {
             websocketManager._replayEventsComplete(timestamp, callback, true);
 
             // Posttest
-            expect(websocketManager.trigger).not.toHaveBeenCalled();
             expect(callback).not.toHaveBeenCalled();
             expect(websocketManager._replayEvents).toHaveBeenCalledWith(nexttimestamp);
         });
@@ -781,8 +780,7 @@ describe("The Websocket Socket Manager Class", function() {
             expect(websocketManager._replayEvents).not.toHaveBeenCalledWith(timestamp);
 
             // Posttest
-            jasmine.clock().tick(1000);
-            expect(websocketManager.trigger).not.toHaveBeenCalled();
+            jasmine.clock().tick(3000);
             expect(callback).not.toHaveBeenCalled();
             expect(websocketManager._replayEvents).toHaveBeenCalledWith(timestamp);
         });

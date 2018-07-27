@@ -1,6 +1,6 @@
 {
   "name": "layer-websdk",
-  "version": "3.4.6",
+  "version": "3.4.7",
   "description": "Layer Web SDK - JavaScript library for adding chat services to your web application.",
   "keywords": "layer,sdk,websdk,developers,communications,messaging,chat",
   "homepage": "https://developer.layer.com/docs/websdk",
