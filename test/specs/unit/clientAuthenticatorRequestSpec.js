@@ -567,8 +567,12 @@ describe("The Client Authenticator Requests", function() {
             expect(headers).toEqual({
                 "hey-ho": "Doh",
                 "content-type": "application/json",
+                "layer-xdk-version": client.constructor.version,
+                "client-id": client._tabId,
                 accept: "application/vnd.layer+json; version=2.0"
             });
+            expect(client.constructor.version.length > 0).toBe(true);
+            expect(client._tabId.length > 0).toBe(true);
         });
 
         it("Should pass through lower case headers", function() {
@@ -582,6 +586,8 @@ describe("The Client Authenticator Requests", function() {
             expect(headers).toEqual({
                 "hey-ho": "Doh",
                 "content-type": "application/json",
+                "layer-xdk-version": client.constructor.version,
+                "client-id": client._tabId,
                 accept: "application/vnd.layer+json; version=2.0"
             });
         });
@@ -596,7 +602,9 @@ describe("The Client Authenticator Requests", function() {
             // Posttest
             expect(headers).toEqual({
                 "content-type": "text/mountain",
-                accept: "application/vnd.layer+json; version=2.0"
+                accept: "application/vnd.layer+json; version=2.0",
+                "layer-xdk-version": client.constructor.version,
+                "client-id": client._tabId,
             });
         });
     });

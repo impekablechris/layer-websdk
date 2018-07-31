@@ -1,5 +1,12 @@
 # Web SDK Change Log
 
+## 3.4.8
+
+Better tracking of requests:
+
+* REST API requests and Websocket connections now identify the version and TabID of the request
+* TabID differentiates between different browser tabs (or reloads of the page) vs just reconnects from the same client
+
 ## 3.4.7
 
 Fixes aimed at websocket stability:

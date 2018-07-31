@@ -634,13 +634,15 @@ Client.prototype.telemetryEnabled = true;
  */
 Client.prototype.telemetryMonitor = null;
 
+Client.prototype._tabId = Util.generateUUID();
+
 /**
  * Get the version of the Client library.
  *
  * @static
  * @type {String}
  */
-Client.version = '3.4.7';
+Client.version = '3.4.8';
 
 /**
  * Any  Message that is part of a Query's results are kept in memory for as long as it

@@ -1071,6 +1071,9 @@ class ClientAuthenticator extends Root {
     if (!headers.accept) headers.accept = ACCEPT;
 
     if (!headers['content-type']) headers['content-type'] = 'application/json';
+
+    if (!headers['layer-xdk-version']) headers['layer-xdk-version'] = this.constructor.version;
+    if (!headers['client-id']) headers['client-id'] = this._tabId;
   }
 
   /**
