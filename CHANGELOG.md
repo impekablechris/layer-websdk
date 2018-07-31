@@ -1,5 +1,13 @@
 # Web SDK Change Log
 
+## 3.4.10
+
+Changes exponential backoff jitter to vary more widely
+
+## 3.4.9
+
+Exponential backoff for websocket reconnects changed from a max of 30 seconds delay to a max of 10 minutes delay.
+
 ## 3.4.8
 
 Better tracking of requests:

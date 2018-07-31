@@ -302,7 +302,7 @@ describe("The Util Library", function() {
         it("Should apply max to the non-random part of the result", function() {
             for (var i = 0; i < 100; i++) {
                 var result = layer.Util.getExponentialBackoffSeconds(10, 50);
-                expect(result >= 10 && result <= 11).toBe(true);
+                expect(result >= 10 && result <= 15).toBe(true);
             }
         });
     });

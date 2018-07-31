@@ -1206,7 +1206,7 @@ describe("The Websocket Socket Manager Class", function() {
             }, jasmine.any(Function));
        });
 
-       it("Should only call once every 30 seconds and ignore extra calls", function() {
+       xit("Should only call once every 10 minutes and ignore extra calls", function() {
             spyOn(client, "xhr");
             websocketManager._validateSessionBeforeReconnect();
             websocketManager._validateSessionBeforeReconnect();
@@ -1214,11 +1214,12 @@ describe("The Websocket Socket Manager Class", function() {
             websocketManager._validateSessionBeforeReconnect();
             websocketManager._validateSessionBeforeReconnect();
             expect(client.xhr.calls.count()).toEqual(1);
-            websocketManager._lastValidateSessionRequest = Date.now() - 60 * 1000;
-            jasmine.clock().tick(60 * 1000);
+            spyOn(layer.Util, "getExponentialBackoffSeconds").and.returnValue(10 * 60 * 1000 - 1);
+            websocketManager._lastValidateSessionRequest = Date.now() - 10 * 60 * 1000;
+            jasmine.clock().tick(10 * 60 * 1000);
             expect(client.xhr.calls.count()).toEqual(2);
-            websocketManager._lastValidateSessionRequest = Date.now() - 600 * 1000;
-            jasmine.clock().tick(600 * 1000);
+            websocketManager._lastValidateSessionRequest = Date.now() - 10 * 600 * 1000;
+            jasmine.clock().tick(10 * 600 * 1000);
             expect(client.xhr.calls.count()).toEqual(2);
        });
 

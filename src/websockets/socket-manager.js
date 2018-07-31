@@ -790,7 +790,7 @@ SocketManager.prototype.pingFrequency = 30000;
  *
  * @type {Number}
  */
-SocketManager.prototype.maxDelaySecondsBetweenReconnect = 30;
+SocketManager.prototype.maxDelaySecondsBetweenReconnect = 10 * 60;
 
 /**
  * The Client that owns this.

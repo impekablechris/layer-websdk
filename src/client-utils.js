@@ -176,10 +176,12 @@ exports.decode = (str) => {
 exports.getExponentialBackoffSeconds = function getExponentialBackoffSeconds(maxSeconds, counter) {
   let secondsWaitTime = (Math.pow(2, counter)) / 10,
     secondsOffset = Math.random(); // value between 0-1 seconds.
-  if (counter < 2) secondsOffset = secondsOffset / 4; // values less than 0.2 should be offset by 0-0.25 seconds
-  else if (counter < 6) secondsOffset = secondsOffset / 2; // values between 0.2 and 1.0 should be offset by 0-0.5 seconds
 
   if (secondsWaitTime >= maxSeconds) secondsWaitTime = maxSeconds;
+
+  if (counter < 2) secondsOffset = secondsOffset / 4; // values less than 0.2 should be offset by 0-0.25 seconds
+  else if (counter < 6) secondsOffset = secondsOffset / 2; // values between 0.2 and 1.0 should be offset by 0-0.5 seconds
+  else secondsOffset = secondsWaitTime * 0.5 * secondsOffset; // Random increment between 0-50% of existing delay
 
   return secondsWaitTime + secondsOffset;
 };
