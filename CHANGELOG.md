@@ -1,5 +1,9 @@
 # Web SDK Change Log
 
+## 3.4.11
+
+Fixes Websocket reconnect logic that results in a reconnect every 10 minutes.
+
 ## 3.4.10
 
 Changes exponential backoff jitter to vary more widely

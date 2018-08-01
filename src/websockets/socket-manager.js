@@ -727,8 +727,7 @@ class SocketManager extends Root {
         if (result.success) {
           this.trigger('connecting', { from: '_validateSessionBeforeReconnect', why: 'has valid session token' });
           this.connect();
-        }
-        if (result.status === 401) {
+        } else if (result.status === 401) {
           // client-authenticator.js captures this state and handles it; `connect()` will be called once reauthentication completes
         } else {
           this.trigger('schedule-reconnect', { from: '_validateSessionBeforeReconnect', why: 'Unexpected error: ' + result.status });
