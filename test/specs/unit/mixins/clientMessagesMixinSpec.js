@@ -7,9 +7,9 @@ describe("The Client Message Mixin", function() {
     var cid1 = "layer:///conversations/test1",
         cid2 = "layer:///conversations/test2",
         cid3 = "layer:///conversations/test3",
-        url1 = "https://huh.com/conversations/test1",
-        url2 = "https://huh.com/conversations/test2",
-        url3 = "https://huh.com/conversations/test3";
+        url1 = "http://localhost:9753/conversations/test1",
+        url2 = "http://localhost:9753/conversations/test2",
+        url3 = "http://localhost:9753/conversations/test3";
     var client, requests;
 
     beforeEach(function() {
@@ -21,7 +21,7 @@ describe("The Client Message Mixin", function() {
 
         client = new layer.Client({
             appId: appId,
-            url: "https://huh.com"
+            url: "http://localhost:9753"
         });
         client.sessionToken = "sessionToken";
 

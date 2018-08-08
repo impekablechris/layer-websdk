@@ -7,9 +7,9 @@ describe("The Client class", function() {
     var cid1 = "layer:///conversations/test1",
         cid2 = "layer:///conversations/test2",
         cid3 = "layer:///conversations/test3",
-        url1 = "https://huh.com/conversations/test1",
-        url2 = "https://huh.com/conversations/test2",
-        url3 = "https://huh.com/conversations/test3";
+        url1 = "http://localhost:9753/conversations/test1",
+        url2 = "http://localhost:9753/conversations/test2",
+        url3 = "http://localhost:9753/conversations/test3";
     var client, requests, userIdentity, userIdentity2, membership1, membership2;
 
     beforeEach(function() {
@@ -21,7 +21,7 @@ describe("The Client class", function() {
 
         client = new layer.Client({
             appId: appId,
-            url: "https://huh.com"
+            url: "http://localhost:9753"
         });
         client.sessionToken = "sessionToken";
 
@@ -54,7 +54,7 @@ describe("The Client class", function() {
         it("Should register the Client", function() {
             var client = new layer.Client({
                 appId: "Samunwise",
-                url: "https://huh.com"
+                url: "http://localhost:9753"
             });
             expect(layer.Client.getClient("Samunwise")).toBe(client);
         });
@@ -62,7 +62,7 @@ describe("The Client class", function() {
         it("Should initialize all caches", function() {
             var client = new layer.Client({
                 appId: "Samunwise",
-                url: "https://huh.com"
+                url: "http://localhost:9753"
             });
             expect(client._scheduleCheckAndPurgeCacheItems).toEqual([]);
         });
@@ -77,7 +77,7 @@ describe("The Client class", function() {
             spyOn(layer.Client.prototype, "_connectionRestored");
             var client = new layer.Client({
                 appId: "Samunwise",
-                url: "https://huh.com"
+                url: "http://localhost:9753"
             });
             expect(client._connectionRestored).not.toHaveBeenCalled();
 

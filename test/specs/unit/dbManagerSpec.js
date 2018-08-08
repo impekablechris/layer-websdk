@@ -65,7 +65,7 @@ var dbIt = it;
       beforeEach(function(done) {
           client = new layer.Client({
               appId: appId,
-              url: "https://huh.com",
+              url: "http://localhost:9753",
               isTrustedDevice: true,
               isPersistenceEnabled: dbIsTestable
           });
@@ -607,7 +607,7 @@ var dbIt = it;
               is_unread: false,
               sender: {
                 id: "layer:///identities/Frodo",
-                url: "https://huh.com/identities/Frodo",
+                url: "http://localhost:9753/identities/Frodo",
                 user_id: message.sender.userId || '',
                 display_name: message.sender.displayName,
                 avatar_url: message.sender.avatarUrl
@@ -697,7 +697,7 @@ var dbIt = it;
               is_unread: false,
               sender: {
                 id: "layer:///identities/Frodo",
-                url: "https://huh.com/identities/Frodo",
+                url: "http://localhost:9753/identities/Frodo",
                 user_id: message.sender.userId || '',
                 display_name: message.sender.displayName,
                 avatar_url: message.sender.avatarUrl
@@ -750,7 +750,7 @@ var dbIt = it;
               is_unread: false,
               sender: {
                 id: "layer:///identities/Frodo",
-                url: "https://huh.com/identities/Frodo",
+                url: "http://localhost:9753/identities/Frodo",
                 user_id: message.sender.userId || '',
                 display_name: message.sender.displayName,
                 avatar_url: message.sender.avatarUrl

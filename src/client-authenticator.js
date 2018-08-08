@@ -1036,7 +1036,7 @@ class ClientAuthenticator extends Root {
    */
   _xhrFixRelativeUrls(url) {
     let result = url;
-    if (url.indexOf('https://') === -1) {
+    if (url.indexOf('https://') === -1 && url.indexOf('http://') === -1) {
       if (url[0] === '/') {
         result = this.url + url;
       } else {

@@ -10,7 +10,7 @@ describe("The QueryBuilder Classes", function() {
         jasmine.Ajax.install();
         client = new layer.Client({
             appId: appId,
-            url: "https://huh.com"
+            url: "http://localhost:9753"
         });
         client.sessionToken = "sessionToken";
         client.userId = "Frodo";

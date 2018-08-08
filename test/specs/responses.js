@@ -1,11 +1,11 @@
 /* eslint-disable no-undef */
 var messageTemplate = {
     "id": "layer:///messages/940de862-3c96-11e4-baad-164230d1df67",
-    "url": "https://huh.com/messages/940de862-3c96-11e4-baad-164230d1df67",
+    "url": "http://localhost:9753/messages/940de862-3c96-11e4-baad-164230d1df67",
     "position": 15032697020,
     "conversation": {
         "id": "layer:///conversations/f3cc7b32-3c92-11e4-baad-164230d1df67",
-        "url": "https://huh.com/conversations/f3cc7b32-3c92-11e4-baad-164230d1df67"
+        "url": "http://localhost:9753/conversations/f3cc7b32-3c92-11e4-baad-164230d1df67"
     },
     "parts": [
         {
@@ -32,7 +32,7 @@ var messageTemplate = {
         "user_id": "12345",
         "display_name": "One through Five",
         "id": "layer:///identities/12345",
-        "url": "https://huh.com/identities/12345"
+        "url": "http://localhost:9753/identities/12345"
     },
     "is_unread": true,
     "recipient_status": {
@@ -62,17 +62,17 @@ responses = {
         "type": "missing",
         "code": 401,
         "id": "you-are-frelled",
-        "url": "https://huh.com"
+        "url": "http://localhost:9753"
     },
 
     conversation1: {
         "id": "layer:///conversations/f3cc7b32-3c92-11e4-baad-164230d1df67",
-        "url": "https://huh.com/conversations/f3cc7b32-3c92-11e4-baad-164230d1df67",
+        "url": "http://localhost:9753/conversations/f3cc7b32-3c92-11e4-baad-164230d1df67",
         "created_at": "2014-09-15T04:44:47+00:00",
         "last_message": sampleMessage1,
         "participants": [
-            {user_id: "1234", id: "layer:///identities/1234", url: "https://huh.com/identities/1234", display_name: "one two three four", avatar_url: ""},
-            {user_id: "5678", id: "layer:///identities/5678", url: "https://huh.com/identities/5678", display_name: "five six seven eight", avatar_url: ""},
+            {user_id: "1234", id: "layer:///identities/1234", url: "http://localhost:9753/identities/1234", display_name: "one two three four", avatar_url: ""},
+            {user_id: "5678", id: "layer:///identities/5678", url: "http://localhost:9753/identities/5678", display_name: "five six seven eight", avatar_url: ""},
         ],
         "distinct": true,
         "unread_message_count": 3,
@@ -83,13 +83,13 @@ responses = {
     },
     conversation2: {
         "id": "layer:///conversations/f3cc7b32-3c92-11e4-baad-164230d1df68",
-        "url": "https://huh.com/conversations/f3cc7b32-3c92-11e4-baad-164230d1df68",
+        "url": "http://localhost:9753/conversations/f3cc7b32-3c92-11e4-baad-164230d1df68",
         "created_at": "2014-09-15T04:44:47+00:00",
         "last_message": sampleMessage2,
         "participants": [
-            {user_id: "777", id: "layer:///identities/777", url: "https://huh.com/identities/777", display_name: "Sevens", avatar_url: ""},
-            {user_id: "999", id: "layer:///identities/999", url: "https://huh.com/identities/999", display_name: "Nines", avatar_url: ""},
-            {user_id: "111", id: "layer:///identities/111", url: "https://huh.com/identities/111", display_name: "Ones", avatar_url: ""},
+            {user_id: "777", id: "layer:///identities/777", url: "http://localhost:9753/identities/777", display_name: "Sevens", avatar_url: ""},
+            {user_id: "999", id: "layer:///identities/999", url: "http://localhost:9753/identities/999", display_name: "Nines", avatar_url: ""},
+            {user_id: "111", id: "layer:///identities/111", url: "http://localhost:9753/identities/111", display_name: "Ones", avatar_url: ""},
         ],
         "distinct": true,
         "unread_message_count": 3,
@@ -100,7 +100,7 @@ responses = {
     },
     channel1: {
         "id": "layer:///channels/f3cc7b32-3c92-11e4-baad-164230d1df68",
-        "url": "https://huh.com/channels/f3cc7b32-3c92-11e4-baad-164230d1df68",
+        "url": "http://localhost:9753/channels/f3cc7b32-3c92-11e4-baad-164230d1df68",
         "created_at": "2014-09-15T04:44:47+00:00",
         "name": "just a channel",
         "metadata": {
@@ -113,7 +113,7 @@ responses = {
     },
     channel2: {
         "id": "layer:///channels/f3cc7b32-3c92-11e4-baad-164230d1df33",
-        "url": "https://huh.com/channels/f3cc7b32-3c92-11e4-baad-164230d1df33",
+        "url": "http://localhost:9753/channels/f3cc7b32-3c92-11e4-baad-164230d1df33",
         "created_at": "2014-09-15T04:44:47+00:00",
         "name": "another a channel",
         "metadata": {
@@ -128,7 +128,7 @@ responses = {
     message2: sampleMessage3,
     announcement: {
        "id": "layer:///announcements/b40de862-3c96-11e4-baad-164230d1df67",
-      "url": "https://huh.com/announcements/b40de862-3c96-11e4-baad-164230d1df67",
+      "url": "http://localhost:9753/announcements/b40de862-3c96-11e4-baad-164230d1df67",
       "position": 15032697020,
       "parts": [
           {
@@ -143,7 +143,7 @@ responses = {
         "user_id": "admin",
         "display_name": "Lord Master the Admin",
         "id": "layer:///identities/admin",
-        "url": "https://huh.com/identities/admin"
+        "url": "http://localhost:9753/identities/admin"
       },
       "is_unread": true,
       "recipient_status": {
@@ -160,7 +160,7 @@ responses = {
     },
     membership1: {
         "id": "layer:///channels/f3cc7b32-3c92-11e4-baad-164230d1df68/members/FrodoTheDodo",
-        "url": "https://huh.com/channels/f3cc7b32-3c92-11e4-baad-164230d1df68/members/FrodoTheDodo",
+        "url": "http://localhost:9753/channels/f3cc7b32-3c92-11e4-baad-164230d1df68/members/FrodoTheDodo",
         "channel": {
             "id": "layer:///channels/f3cc7b32-3c92-11e4-baad-164230d1df68",
             "url": "https://api.layer.com/channels/f3cc7b32-3c92-11e4-baad-164230d1df68",

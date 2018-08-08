@@ -163,8 +163,8 @@ exports.decode = (str) => {
       9: 51.2
       10: 102.4
       11. 204.8
-      12. 409.6
-      13. 819.2
+      12. 409.6 (~7 minutes)
+      13. 819.2 (~14 minutes)
       14. 1638.4 (27 minutes)
 
  * @method getExponentialBackoffSeconds

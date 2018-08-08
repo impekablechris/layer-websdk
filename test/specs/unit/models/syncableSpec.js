@@ -15,7 +15,7 @@ describe("The Syncable Class", function() {
         requests = jasmine.Ajax.requests;
         client = new layer.Client({
             appId: appId,
-            url: "https://huh.com"
+            url: "http://localhost:9753"
         });
         client.sessionToken = "sessionToken";
         client.user = new layer.Identity({
@@ -133,7 +133,7 @@ describe("The Syncable Class", function() {
             layer.Message.prototype._load = jasmine.createSpy('load');
             client = new layer.Client({
                 appId: appId,
-                url: "https://huh.com"
+                url: "http://localhost:9753"
             });
 
             var ident = layer.Message.load(responses.message1.id, client);

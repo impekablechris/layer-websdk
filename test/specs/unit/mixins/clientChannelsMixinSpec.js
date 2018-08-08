@@ -5,7 +5,7 @@ describe("The Client Channel Mixin", function() {
     var userId = "93c83ec4-b508-4a60-8550-099f9c42ec1a";
     var identityToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImN0eSI6ImxheWVyLWVpdDt2PTEiLCJraWQiOiIyOWUzN2ZhZS02MDdlLTExZTQtYTQ2OS00MTBiMDAwMDAyZjgifQ.eyJpc3MiOiI4YmY1MTQ2MC02MDY5LTExZTQtODhkYi00MTBiMDAwMDAwZTYiLCJwcm4iOiI5M2M4M2VjNC1iNTA4LTRhNjAtODU1MC0wOTlmOWM0MmVjMWEiLCJpYXQiOjE0MTcwMjU0NTQsImV4cCI6MTQxODIzNTA1NCwibmNlIjoiRFZPVFZzcDk0ZU9lNUNzZDdmaWVlWFBvUXB3RDl5SjRpQ0EvVHJSMUVJT25BSEdTcE5Mcno0Yk9YbEN2VDVkWVdEdy9zU1EreVBkZmEydVlBekgrNmc9PSJ9.LlylqnfgK5nhn6KEsitJMsjfayvAJUfAb33wuoCaNChsiRXRtT4Ws_mYHlgwofVGIXKYrRf4be9Cw1qBKNmrxr0er5a8fxIN92kbL-DlRAAg32clfZ_MxOfblze0DHszvjWBrI7F-cqs3irRi5NbrSQxeLZIiGQdBCn8Qn5Zv9s";
     var cid1 = "layer:///channels/test1",
-        url1 = "https://huh.com/channels/test1";
+        url1 = "http://localhost:9753/channels/test1";
     var client, requests, userIdentity, userIdentity2;
 
     beforeEach(function() {
@@ -17,7 +17,7 @@ describe("The Client Channel Mixin", function() {
 
         client = new layer.Client({
             appId: appId,
-            url: "https://huh.com"
+            url: "http://localhost:9753"
         });
         client.sessionToken = "sessionToken";
 

@@ -14,7 +14,7 @@ describe("The Channel Class", function() {
         requests = jasmine.Ajax.requests;
         client = new layer.Client({
             appId: appId,
-            url: "https://huh.com"
+            url: "http://localhost:9753"
         });
         client.sessionToken = "sessionToken";
 

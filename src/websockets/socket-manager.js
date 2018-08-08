@@ -685,7 +685,7 @@ class SocketManager extends Root {
   _scheduleReconnect() {
     if (this.isDestroyed || !this.client.isOnline || !this.client.isAuthenticated) return;
 
-    const backoffCounter = Math.min(this._lostConnectionCount + 4, 11);
+    const backoffCounter = Math.min(this._lostConnectionCount + 4, 13);
     const delay = Utils.getExponentialBackoffSeconds(this.maxDelaySecondsBetweenReconnect, backoffCounter);
     this.trigger('scheduling-reconnect', { counter: backoffCounter, delay });
     logger.warn('Websocket Reconnect in ' + delay + ' seconds');
@@ -707,34 +707,21 @@ class SocketManager extends Root {
   _validateSessionBeforeReconnect() {
     if (this.isDestroyed || !this.client.isOnline || !this.client.isAuthenticated) return;
 
-    const maxDelay = this.maxDelaySecondsBetweenReconnect * 1000;
-    const diff = Date.now() - this._lastValidateSessionRequest - maxDelay;
-    if (diff < 0) {
-      // This is identical to whats in _scheduleReconnect and could be cleaner
-      if (!this._reconnectId) {
-        this._reconnectId = setTimeout(() => {
-          this._reconnectId = 0;
-          this._validateSessionBeforeReconnect();
-        }, Math.abs(diff) + 1000);
+    this.client.xhr({
+      url: '/?action=validateConnectionForWebsocket&client=' + this.client.constructor.version,
+      method: 'GET',
+      sync: false,
+    }, (result) => {
+      if (result.success) {
+        this.trigger('connecting', { from: '_validateSessionBeforeReconnect', why: 'has valid session token' });
+        this.connect();
+      } else if (result.status === 401) {
+        // client-authenticator.js captures this state and handles it; `connect()` will be called once reauthentication completes
+      } else {
+        this.trigger('schedule-reconnect', { from: '_validateSessionBeforeReconnect', why: 'Unexpected error: ' + result.status });
+        this._scheduleReconnect();
       }
-    } else {
-      this._lastValidateSessionRequest = Date.now();
-      this.client.xhr({
-        url: '/?action=validateConnectionForWebsocket&client=' + this.client.constructor.version,
-        method: 'GET',
-        sync: false,
-      }, (result) => {
-        if (result.success) {
-          this.trigger('connecting', { from: '_validateSessionBeforeReconnect', why: 'has valid session token' });
-          this.connect();
-        } else if (result.status === 401) {
-          // client-authenticator.js captures this state and handles it; `connect()` will be called once reauthentication completes
-        } else {
-          this.trigger('schedule-reconnect', { from: '_validateSessionBeforeReconnect', why: 'Unexpected error: ' + result.status });
-          this._scheduleReconnect();
-        }
-      });
-    }
+    });
   }
 }
 
@@ -771,12 +758,6 @@ SocketManager.prototype._lastGetCounterRequest = 0;
 SocketManager.prototype._lastGetCounterId = 0;
 
 /**
- * Time in miliseconds since the last call to _validateSessionBeforeReconnect
- * @type {Number}
- */
-SocketManager.prototype._lastValidateSessionRequest = 0;
-
-/**
  * Frequency with which the websocket checks to see if any websocket notifications
  * have been missed.  This test is done by calling `getCounter`
  *
@@ -789,7 +770,7 @@ SocketManager.prototype.pingFrequency = 30000;
  *
  * @type {Number}
  */
-SocketManager.prototype.maxDelaySecondsBetweenReconnect = 10 * 60;
+SocketManager.prototype.maxDelaySecondsBetweenReconnect = 8 * 60;
 
 /**
  * The Client that owns this.

@@ -245,7 +245,7 @@ class XHRSyncEvent extends SyncEvent {
   _updateUrl(client) {
     if (!this.target) return;
     const target = client.getObject(this.target);
-    if (target && !this.url.match(/^http(s):\/\//)) {
+    if (target && !this.url.match(/^https?:\/\//)) {
       this.url = target._getUrl(this.url);
     }
   }

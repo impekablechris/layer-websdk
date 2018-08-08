@@ -642,7 +642,7 @@ Client.prototype._tabId = Util.generateUUID();
  * @static
  * @type {String}
  */
-Client.version = '3.4.11';
+Client.version = '3.4.12';
 
 /**
  * Any  Message that is part of a Query's results are kept in memory for as long as it

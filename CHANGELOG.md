@@ -1,5 +1,13 @@
 # Web SDK Change Log
 
+## 3.4.12
+
+Updates recovery and network detection code:
+
+* Online Detection now makes a final ping to the server before declaring client to be offline; previously did the ping after going offline; going back online short circuited the 10 minute reconnect logic on websockets
+* Websocket reconnect logic now uses exponential backoff until it hits between 8-12 minutes between retry; primarily to handle case of 429, 503 and other server problem
+* IE11 test environment now chokes on unit tests against https://huh.com; also https://localhost; updates now support tests against http://localhost
+
 ## 3.4.11
 
 Fixes Websocket reconnect logic that results in a reconnect every 10 minutes.

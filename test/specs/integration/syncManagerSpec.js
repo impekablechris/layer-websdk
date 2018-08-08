@@ -9,7 +9,7 @@ describe("SyncManager Integration Tests", function() {
         requests = jasmine.Ajax.requests;
         client = new layer.Client({
             appId: appId,
-            url: "https://huh.com",
+            url: "http://localhost:9753",
             isTrustedDevice: false
         });
         client.sessionToken = "sessionToken";
