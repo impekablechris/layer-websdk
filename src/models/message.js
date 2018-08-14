@@ -167,6 +167,7 @@ class Message extends Syncable {
     }
 
     if (!this.parts) this.parts = [];
+    this._regenerateMimeAttributesMap();
   }
 
 
