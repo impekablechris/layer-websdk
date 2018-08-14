@@ -57,6 +57,7 @@ class CardModel extends Root {
 
 
   _setupMessage(doNotParse) {
+    this.message._regenerateMimeAttributesMap();
     if (this.part) {
       this.id = CardModel.prefixUUID + this.part.id.replace(/^.*messages\//, '');
       this.role = this.part.mimeAttributes.role;
