@@ -283,6 +283,19 @@ describe("The Websocket Socket Manager Class", function() {
             // Posttest
             expect(websocketManager._reconnect).toHaveBeenCalledWith();
         });
+
+        it("Should not connect if client.disconnect() has been called", function() {
+            expect(websocketManager._socket).not.toBe(null);
+
+            // Prevents connect
+            client.disconnect();
+            websocketManager.connect();
+            expect(websocketManager._socket).toBe(null);
+
+            // Enables connect
+            client.reconnect();
+            expect(websocketManager._socket).not.toBe(null);
+        });
     });
 
     describe("The _clearConnectionFailed() method", function() {
@@ -1240,6 +1253,5 @@ describe("The Websocket Socket Manager Class", function() {
           });
           expect(websocketManager.connect).not.toHaveBeenCalled();
        });
-
     });
 });

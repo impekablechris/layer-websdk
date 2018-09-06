@@ -193,6 +193,7 @@ describe("The Client Authenticator Requests", function() {
 
             // Run 1
             client._wantsToBeAuthenticated = true;
+            client._wantsToBeConnected = true;
             client.isAuthenticated = false;
             client.sendSocketRequest({
                 body: "Hey!",
@@ -206,6 +207,7 @@ describe("The Client Authenticator Requests", function() {
 
             // Run 2
             client._wantsToBeAuthenticated = false;
+            client._wantsToBeConnected = true;
             client.isAuthenticated = false;
             client.sendSocketRequest({
                 body: "Hey!",
@@ -219,6 +221,7 @@ describe("The Client Authenticator Requests", function() {
 
             // Run 2
             client._wantsToBeAuthenticated = true;
+            client._wantsToBeConnected = true;
             client.isAuthenticated = true;
             client.sendSocketRequest({
                 body: "Hey!",
@@ -375,6 +378,7 @@ describe("The Client Authenticator Requests", function() {
 
             // Run 1
             client._wantsToBeAuthenticated = true;
+            client._wantsToBeConnected = true;
             client.isAuthenticated = false;
             client._syncXhr({url: "fred", method: "POST", headers: {}});
             expect(client._connect).toHaveBeenCalled();
@@ -382,6 +386,7 @@ describe("The Client Authenticator Requests", function() {
 
             // Run 2
             client._wantsToBeAuthenticated = false;
+            client._wantsToBeConnected = true;
             client.isAuthenticated = false;
             client._syncXhr({url: "fred", method: "POST", headers: {}});
             expect(client._connect).not.toHaveBeenCalled();
@@ -389,6 +394,7 @@ describe("The Client Authenticator Requests", function() {
 
             // Run 2
             client._wantsToBeAuthenticated = true;
+            client._wantsToBeConnected = true;
             client.isAuthenticated = true;
             client._syncXhr({url: "fred", method: "POST", headers: {}});
             expect(client._connect).not.toHaveBeenCalled();
@@ -676,6 +682,7 @@ describe("The Client Authenticator Requests", function() {
         it("Should clear isAuthenticated and isReady on getting a 401", function() {
             client.isAuthenticated = true;
             client._wantsToBeAuthenticated = true;
+            client._wantsToBeConnected = true;
             client.isReady = true;
             client._xhrResult({
                 success: false,
@@ -695,6 +702,7 @@ describe("The Client Authenticator Requests", function() {
         it("Should clear localStorage sessionToken on getting a 401", function() {
           client.isAuthenticated = true;
           client._wantsToBeAuthenticated = true;
+          client._wantsToBeConnected = true;
           localStorage[layer.Constants.LOCALSTORAGE_KEYS.SESSIONDATA + client.appId] = "Frodo and Gollum Kissing in a Tree";
           client._xhrResult({
               success: false,
@@ -713,6 +721,7 @@ describe("The Client Authenticator Requests", function() {
         it("Should call _authenticate on getting a 401 if wants to be authenticated", function() {
             // Setup
             client._wantsToBeAuthenticated = true;
+            client._wantsToBeConnected = true;
             client._lastChallengeTime = client.TimeBetweenReauths - 1;
             spyOn(client, "_authenticate");
 
@@ -732,6 +741,7 @@ describe("The Client Authenticator Requests", function() {
 
             // Run Test 2
             client._wantsToBeAuthenticated = false;
+            client._wantsToBeConnected = true;
             client._lastChallengeTime = 0;
             client._xhrResult({
                 success: false,
@@ -747,6 +757,7 @@ describe("The Client Authenticator Requests", function() {
 
             // Run Test 3
             client._wantsToBeAuthenticated = true;
+            client._wantsToBeConnected = true;
             client._lastChallengeTime = Date.now() - 100;
             client._xhrResult({
                 success: false,

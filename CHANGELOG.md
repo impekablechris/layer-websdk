@@ -1,5 +1,10 @@
 # Web SDK Change Log
 
+## 3.4.13
+
+* Adds a `client.disconnect()` method that closes the websocket connection, and stops pinging to see if Layer's servers are reachable
+* Adds a `client.reconnect()` method that restores services after a `client.disconnect()` call
+
 ## 3.4.12
 
 Updates recovery and network detection code:

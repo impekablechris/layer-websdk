@@ -221,9 +221,15 @@ module.exports = (request, callback) => {
   }
 };
 
-const listeners = [];
+let listeners = [];
 module.exports.addConnectionListener = func => listeners.push(func);
 
+let inTrigger = false;
 module.exports.trigger = (evt) => {
-  listeners.forEach(func => func(evt));
+  if (inTrigger) return;
+  inTrigger = true;
+  try {
+    listeners.forEach(func => func(evt));
+  } catch (e) {}
+  inTrigger = false;
 };

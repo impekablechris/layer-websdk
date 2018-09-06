@@ -10,6 +10,21 @@
  * to the `message` event if they want richer event information than is available
  * through the layer.Client class.
  *
+ * Backoff will retry the connection after:
+ * * 1.6 seconds
+ * * 3.2 seconds
+ * * 12.8 seconds
+ * * 25.6 seconds
+ * * 51 seconds
+ * * ….
+ * * 8 minutes
+ *
+ * etc… each of those retries has randomized jitter between 0 and 50% of the delay (so 1.6 seconds delay is * actually anywhere between 1.6 - 2.4 seconds)
+ *
+ * Websocket reconnects are only performed after a REST API call that validates we are online and able to reach layer’s servers; this greatly reduces the likelihood of failure caused by networking issues.
+ *
+ * There is no time at which it simply gives up and stops retrying; however once ever 8 minutes (8-12 minutes due to 50% jitter) is slow enough that it shouldn’t contribute to rate limiting (unless there are a massive number of tabs involved)
+ *
  * @class  layer.Websockets.SocketManager
  * @extends layer.Root
  * @private
@@ -141,7 +156,7 @@ class SocketManager extends Root {
    * @param  {layer.SyncEvent} evt - Ignored parameter
    */
   connect(evt) {
-    if (this.client.isDestroyed || !this.client.isOnline) return;
+    if (this.client.isDestroyed || !this.client.isOnline || !this.client._wantsToBeConnected) return;
     if (this._socket) return this._reconnect();
 
     this._closing = false;

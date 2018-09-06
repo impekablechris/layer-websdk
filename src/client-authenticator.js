@@ -260,6 +260,7 @@ class ClientAuthenticator extends Root {
     this.isConnected = false;
     this._lastChallengeTime = 0;
     this._wantsToBeAuthenticated = true;
+    this._wantsToBeConnected = true;
     this.user = null;
     this.onlineManager.start();
     if (!this.isTrustedDevice || !userId || this._isPersistedSessionsDisabled() || this._hasUserIdChanged(userId)) {
@@ -320,6 +321,7 @@ class ClientAuthenticator extends Root {
     this.user = null;
     this._lastChallengeTime = 0;
     this._wantsToBeAuthenticated = true;
+    this._wantsToBeConnected = true;
     if (!userId || !sessionToken) throw new Error(LayerError.dictionary.sessionAndUserRequired);
     if (!this.isTrustedDevice || this._isPersistedSessionsDisabled() || this._hasUserIdChanged(userId)) {
       this._clearStoredData();
@@ -346,6 +348,29 @@ class ClientAuthenticator extends Root {
       }
     }, 1);
     return this;
+  }
+
+  reconnect() {
+    if (!this.isAuthenticated) {
+      if (this.sessionToken && this.user && this.user.userId) {
+        this.connectWithSession(this.user.userId, this.sessionToken);
+      } else {
+        this.connect();
+      }
+      return;
+    }
+
+    this._wantsToBeConnected = true;
+    this._clientReady();
+    this.onlineManager.start();
+    this.socketManager.connect();
+  }
+
+  disconnect() {
+    this.isReady = false;
+    this._wantsToBeConnected = false;
+    this.socketManager.close();
+    this.onlineManager.stop();
   }
 
   /**
@@ -670,6 +695,8 @@ class ClientAuthenticator extends Root {
    */
   _clientReady() {
     if (!this.isReady) {
+      this._wantsToBeConnected = true;
+      this._wantsToBeAuthenticated = true;
       this.isReady = true;
       this.trigger('ready');
     }
@@ -700,6 +727,7 @@ class ClientAuthenticator extends Root {
    */
   logout(callback) {
     this._wantsToBeAuthenticated = false;
+    this._wantsToBeConnected = true;
     let callbackCount = 1,
       counter = 0;
     if (this.isAuthenticated) {
@@ -906,7 +934,7 @@ class ClientAuthenticator extends Root {
    * @param {layer.LayerEvent} evt
    */
   _handleOnlineChange(evt) {
-    if (!this._wantsToBeAuthenticated) return;
+    if (!this._wantsToBeAuthenticated || !this._wantsToBeConnected) return;
     const duration = evt.offlineDuration;
     const isOnline = evt.eventName === 'connected';
     const obj = { isOnline };
@@ -1172,6 +1200,17 @@ ClientAuthenticator.prototype.isReady = false;
  * @readonly
  */
 ClientAuthenticator.prototype._wantsToBeAuthenticated = false;
+
+/**
+ * State variable; indicates if the WebSDK thinks that the app WANTS to be WebSocket connected.
+ *
+ * An app wants to be connected if it has called `connect()` or `connectWithSession()` or `reconnect()`
+ * and has not called `logout()` or `disconnect()`.
+ *
+ * @type {boolean}
+ * @readonly
+ */
+ClientAuthenticator.prototype._wantsToBeConnected = false;
 
 /**
  * If presence is enabled, then your presence can be set/restored.

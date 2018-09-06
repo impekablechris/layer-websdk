@@ -119,6 +119,7 @@ describe("The Client Authenticator Class", function() {
             client._initComponents();
             client.isAuthenticated = true;
             client._wantsToBeAuthenticated = true;
+            client._wantsToBeConnected = true;
             spyOn(client.socketManager, "connect");
             client.onlineManager.trigger("connected");
             expect(client.socketManager.connect).toHaveBeenCalled();
@@ -708,6 +709,7 @@ describe("The Client Authenticator Class", function() {
             it("Should allow reauthentication", function() {
                 client.isReady = client.isAuthenticated = false;
                 client._wantsToBeAuthenticated = client.isConnected = true;
+                client._wantsToBeConnected = true;
                 client.sessionToken = "Fred";
                 client.connectWithSession('userId', 'sessionToken');
                 jasmine.clock().tick(10);
@@ -1534,6 +1536,7 @@ describe("The Client Authenticator Class", function() {
 
             it("Should reset _wantsToBeAuthenticated", function() {
                 client._wantsToBeAuthenticated = true;
+                client._wantsToBeConnected = true;
                 client.logout();
                 expect(client._wantsToBeAuthenticated).toBe(false);
 
@@ -1641,6 +1644,7 @@ describe("The Client Authenticator Class", function() {
             it("Should trigger online: false if disconnected", function () {
                 client.isAuthenticated = true;
                 client._wantsToBeAuthenticated = true;
+                client._wantsToBeConnected = true;
                 spyOn(client, "trigger");
                 client._handleOnlineChange({
                     eventName: 'disconnected'
@@ -1652,6 +1656,7 @@ describe("The Client Authenticator Class", function() {
             it("Should trigger online: true if connected", function () {
                 client.isAuthenticated = true;
                 client._wantsToBeAuthenticated = true;
+                client._wantsToBeConnected = true;
                 spyOn(client, "trigger");
                 client._handleOnlineChange({
                     eventName: 'connected',
@@ -1664,6 +1669,7 @@ describe("The Client Authenticator Class", function() {
             it("Should trigger reset: true if connected after 30 hours offline", function () {
                 client.isAuthenticated = true;
                 client._wantsToBeAuthenticated = true;
+                client._wantsToBeConnected = true;
                 spyOn(client, "trigger");
                 client._handleOnlineChange({
                     eventName: 'connected',
@@ -1677,6 +1683,7 @@ describe("The Client Authenticator Class", function() {
             it("Should call _connect() if not authenticated but wants to authenticate", function() {
                 client.isAuthenticated = false;
                 client._wantsToBeAuthenticated = true;
+                client._wantsToBeConnected = true;
                 spyOn(client, "_connect");
 
                 // Test 1
@@ -1689,6 +1696,7 @@ describe("The Client Authenticator Class", function() {
 
                 // Test 2
                 client._wantsToBeAuthenticated = false;
+                client._wantsToBeConnected = true;
                 client._handleOnlineChange({
                     eventName: 'connected',
                     offlineDuration: 500
@@ -1698,6 +1706,7 @@ describe("The Client Authenticator Class", function() {
 
                 // Test 3
                 client._wantsToBeAuthenticated = true;
+                client._wantsToBeConnected = true;
                 client.isAuthenticated = true;
                 client._handleOnlineChange({
                     eventName: 'connected',
@@ -1737,6 +1746,119 @@ describe("The Client Authenticator Class", function() {
                 var dbManager = client.dbManager;
                 client._destroyComponents();
                 expect(dbManager.isDestroyed).toBe(true);
+            });
+        });
+
+        describe("The disconnect() method", function() {
+            beforeEach(function() {
+                client._wantsToBeConnected = true;
+            });
+            it("Should set client._wantsToBeConnected to false", function() {
+                expect(client._wantsToBeConnected).toBe(true);
+                client.disconnect();
+                expect(client._wantsToBeConnected).toBe(false);
+            });
+            it("Should disconnect the websocket", function() {
+                spyOn(client.socketManager, "close");
+                client.disconnect();
+                expect(client.socketManager.close).toHaveBeenCalled();
+            });
+
+            it("Should stop the online state manager", function() {
+                spyOn(client.onlineManager, "stop");
+                client.disconnect();
+                expect(client.onlineManager.stop).toHaveBeenCalled();
+            });
+        });
+
+        describe("The reconnect() method", function() {
+            it("Should call connect if the client is not authenticated", function() {
+                client.logout();
+                spyOn(client, "connectWithSession");
+                spyOn(client, "connect");
+
+                // Run
+                client.reconnect();
+
+                // Posttest
+                expect(client.connectWithSession).not.toHaveBeenCalled();
+                expect(client.connect).toHaveBeenCalled();
+            });
+
+            it("Should call connectWithSession if the client is not authenticated but has a user and session token", function() {
+                client.logout();
+                spyOn(client, "connectWithSession");
+                spyOn(client, "connect");
+
+                // Run
+                client.sessionToken = 'sessionToken';
+                client.reconnect();
+
+                // Posttest
+                expect(client.user.userId.length > 0).toBe(true);
+                expect(client.connectWithSession).toHaveBeenCalledWith(client.user.userId, 'sessionToken');
+                expect(client.connect).not.toHaveBeenCalled();
+            });
+
+            it("Should set call neither if authentiated but disconnected", function() {
+                client._clientAuthenticated();
+                client.disconnect();
+                spyOn(client, "connectWithSession");
+                spyOn(client, "connect");
+
+                // Run
+                client.reconnect();
+
+                // Posttest
+                expect(client.connectWithSession).not.toHaveBeenCalled();
+                expect(client.connect).not.toHaveBeenCalled();
+            });
+
+            it("Should set _wantsToBeConnected", function() {
+                client._clientAuthenticated();
+                client.disconnect();
+                expect(client._wantsToBeConnected).toBe(false);
+
+                // Run
+                client.reconnect();
+                expect(client._wantsToBeConnected).toBe(true);
+            });
+
+            it("Should call _clientReady", function() {
+                client._clientAuthenticated();
+                client.disconnect();
+                expect(client.isReady).toBe(false);
+                spyOn(client, "_clientReady");
+
+                // Run
+                client.reconnect();
+
+                // Posttest
+                expect(client._clientReady).toHaveBeenCalled();
+            });
+
+            it("Should call onlineManager.start", function() {
+                client._clientAuthenticated();
+                client.disconnect();
+                spyOn(client.onlineManager, "start");
+
+                // Run
+                client.reconnect();
+
+                // Posttest
+                expect(client.onlineManager.start).toHaveBeenCalled();
+            });
+
+            it("Should call socketManager.connect", function() {
+                client._clientAuthenticated();
+                client.disconnect();
+                spyOn(client.socketManager, "connect");
+
+                // Run
+                client.reconnect();
+
+                // Posttest
+                expect(client.socketManager.connect).toHaveBeenCalled();
             });
         });
     });
