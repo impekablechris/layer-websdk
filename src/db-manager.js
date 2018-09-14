@@ -899,11 +899,11 @@ class DbManager extends Root {
   _createMessage(message) {
     if (!this.client.getMessage(message.id)) {
       message._fromDB = true;
-      if (message.conversationId.indexOf('layer:///conversations')) {
+      if (message.conversationId.indexOf('layer:///conversations') === 0) {
         message.conversation = {
           id: message.conversationId,
         };
-      } else if (message.conversationId.indexOf('layer:///channels')) {
+      } else if (message.conversationId.indexOf('layer:///channels') === 0) {
         message.channel = {
           id: message.conversationId,
         };

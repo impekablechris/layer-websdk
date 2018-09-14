@@ -1,5 +1,9 @@
 # Web SDK Change Log
 
+## 3.4.14
+
+* Fixes bug in support for `isPersistenceEnabled` that causes Messages not to be read correctly from IndexedDB
+
 ## 3.4.13
 
 * Adds a `client.disconnect()` method that closes the websocket connection, and stops pinging to see if Layer's servers are reachable
