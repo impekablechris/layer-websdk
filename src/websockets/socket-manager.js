@@ -86,8 +86,7 @@ class SocketManager extends Root {
   _reset() {
     this._lastTimestamp = 0;
     this._lastDataFromServerTimestamp = 0;
-    this._lastCounter = null;
-    this._hasCounter = false;
+    this._hasZeroCounter = false;
 
     this._needsReplayFrom = null;
   }
@@ -160,8 +159,6 @@ class SocketManager extends Root {
     if (this._socket) return this._reconnect();
 
     this._closing = false;
-
-    this._lastCounter = -1;
 
     // Get the URL and connect to it
     const url = `${this.client.websocketUrl}/?session_token=${this.client.sessionToken}&client-id=${this.client._tabId}` +
@@ -254,7 +251,7 @@ class SocketManager extends Root {
       this.isOpen = true;
       this.trigger('connected');
       logger.debug('Websocket Connected');
-      if (this._hasCounter && this._lastTimestamp) {
+      if (this._hasZeroCounter && this._lastTimestamp) {
         this.trigger('replaying-events', { from: 'resync', why: 'reconnected' });
         this.resync(this._lastTimestamp);
       } else {
@@ -547,23 +544,15 @@ class SocketManager extends Root {
     this._lostConnectionCount = 0;
     try {
       const msg = JSON.parse(evt.data);
-      const lastCounter = this._lastCounter;
-      const skippedCounter = this._lastCounter + 1 !== msg.counter;
-      this._hasCounter = true;
-      this._lastCounter = msg.counter;
+      const hasZero = msg.counter === 0;
+      const isNewConnection = !this._hasZeroCounter && hasZero;
+      this._hasZeroCounter = this._hasZeroCounter || hasZero;
       this._lastDataFromServerTimestamp = Date.now();
 
-
-      // If we've missed a counter, replay to get; note that we had to update _lastCounter
-      // for replayEvents to work correctly.
-      if (skippedCounter) {
-        if (!this._lastSkippedCounter || this._lastSkippedCounter + SocketManager.IGNORE_SKIPPED_COUNTER_INTERVAL < Date.now()) {
-          this.trigger('replaying-events', { from: 'resync', why: `Counter skipped from ${lastCounter} to ${msg.counter}` });
-          this.resync(this._lastTimestamp);
-        } else {
-          this.trigger('ignore-skipped-counter', { from: 'resync', why: `Counter skipped from ${lastCounter} to ${msg.counter} but last resync was ${Date.now() - this._lastSkippedCounter} seconds ago` });
-        }
-        this._lastSkippedCounter = Date.now();
+      // If we're seeing counter of 0 for the second time, our connection has been reset
+      if (hasZero && !isNewConnection) {
+        this.trigger('replaying-events', { from: '_onMessage', why: 'Zero Counter' });
+        this.resync(this._lastTimestamp);
       } else {
         this._lastTimestamp = new Date(msg.timestamp).getTime();
       }
@@ -762,8 +751,7 @@ SocketManager.prototype._connectionFailedId = 0;
 
 SocketManager.prototype._lastTimestamp = 0;
 SocketManager.prototype._lastDataFromServerTimestamp = 0;
-SocketManager.prototype._lastCounter = null;
-SocketManager.prototype._hasCounter = false;
+SocketManager.prototype._hasZeroCounter = false;
 
 SocketManager.prototype._needsReplayFrom = null;
 

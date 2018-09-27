@@ -1,5 +1,9 @@
 # Web SDK Change Log
 
+## 3.4.15
+
+* Address issue where websocket packets arrive out of order, and result in resync calls
+
 ## 3.4.14
 
 * Fixes bug in support for `isPersistenceEnabled` that causes Messages not to be read correctly from IndexedDB
