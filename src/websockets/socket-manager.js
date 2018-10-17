@@ -431,6 +431,27 @@ class SocketManager extends Root {
    * @param  {Boolean}   success
    */
   _replayEventsComplete(timestamp, callback, success) {
+    if (SocketManager.ENABLE_REPLAY_RETRIES) {
+      this._replayEventsCompleteWithRetries(timestamp, callback, success);
+    } else {
+      this._replayEventsCompleteWithoutRetries(timestamp, callback, success);
+    }
+  }
+
+
+  _replayEventsCompleteWithoutRetries(timestamp, callback, success) {
+    if (success) {
+      this._replayRetryCount = 0;
+      this._needsReplayFrom = null;
+      logger.info('Websocket replay complete');
+      if (callback) callback();
+    } else {
+      this._needsReplayFrom = null;
+      logger.warn('Websocket Event.replay has failed');
+    }
+  }
+
+  _replayEventsCompleteWithRetries(timestamp, callback, success) {
     if (success) {
       this._replayRetryCount = 0;
 
@@ -465,6 +486,7 @@ class SocketManager extends Root {
       }, delay * 1000);
       this._replayRetryCount++;
     } else {
+      this._needsReplayFrom = null;
       logger.error('Websocket Event.replay has failed');
     }
   }
@@ -802,6 +824,15 @@ SocketManager.prototype._lostConnectionCount = 0;
 
 SocketManager.IGNORE_SKIPPED_COUNTER_INTERVAL = 60000; // 60 seconds
 
+/**
+ * If enabled, a failure in replaying missed events will be retried. Otherwise,
+ * a failure to replay missed events will accept that some data may have been lost this session,
+ * but will be available next time queries refire.
+ *
+ * @static
+ * @property {Boolean} [ENABLE_REPLAY_RETRIES=false]
+ */
+SocketManager.ENABLE_REPLAY_RETRIES = false;
 
 SocketManager._supportedEvents = [
   /**

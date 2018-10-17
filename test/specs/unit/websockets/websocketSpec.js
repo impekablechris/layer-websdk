@@ -749,15 +749,19 @@ describe("The Websocket Socket Manager Class", function() {
         });
     });
 
-    describe("The _replayEventsComplete() method", function() {
+    describe("The _replayEventsCompleteWithRetries() method", function() {
         var callback, timestamp, nexttimestamp;
         beforeEach(function() {
             timestamp = new Date();
             timestamp.setHours(timestamp.getHours() - 1); // make sure these are different from new Date() which the system might use
             nexttimestamp = new Date();
             nexttimestamp.setHours(nexttimestamp.getHours() + 1);
-
             callback = jasmine.createSpy('callback');
+            layer.Websockets.SocketManager.ENABLE_REPLAY_RETRIES = true;
+        });
+
+        afterEach(function() {
+            layer.Websockets.SocketManager.ENABLE_REPLAY_RETRIES = false;
         });
 
         it("Should call callback if completely done", function() {
@@ -812,6 +816,43 @@ describe("The Websocket Socket Manager Class", function() {
 
             // Posttest
             expect(websocketManager._replayEvents.calls.count() < 20).toBe(true);
+        });
+    });
+
+    describe("The _replayEventsCompleteWithoutRetries() method", function() {
+        var callback, timestamp, nexttimestamp;
+        beforeEach(function() {
+            timestamp = new Date();
+            timestamp.setHours(timestamp.getHours() - 1); // make sure these are different from new Date() which the system might use
+            nexttimestamp = new Date();
+            nexttimestamp.setHours(nexttimestamp.getHours() + 1);
+            callback = jasmine.createSpy('callback');
+        });
+
+        it("Should call callback if completely done", function() {
+            websocketManager._needsReplayFrom = null;
+
+            // Run
+            websocketManager._replayEventsComplete(timestamp, callback, true);
+
+            // Posttest
+            expect(callback).toHaveBeenCalledWith();
+        });
+
+
+        it("Should not schedule retries", function() {
+            websocketManager._needsReplayFrom = nexttimestamp;
+            spyOn(websocketManager, "trigger");
+            spyOn(websocketManager, "_replayEvents").and.callFake(function() {
+                websocketManager._replayEventsComplete(timestamp, callback, false);
+            });
+
+            // Run
+            websocketManager._replayEventsComplete(timestamp, callback, false);
+            jasmine.clock().tick(100000000);
+
+            // Posttest
+            expect(websocketManager._replayEvents.calls.count() ).toBe(0);
         });
     });
 

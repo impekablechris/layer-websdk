@@ -1,5 +1,14 @@
 # Web SDK Change Log
 
+## 3.4.16
+
+Failure to replay missed events when reconnecting the websocket will no longer start a retry loop.  If it fails, the client will get missed events the next time the query refires rather than as a live update.  This behavior can be changed back to older behavior by setting the SocketManager's static property:
+
+```javascript
+layer.Websockets.SocketManager.ENABLE_REPLAY_RETRIES = true;
+```
+
+
 ## 3.4.15
 
 * Address issue where websocket packets arrive out of order, and result in resync calls
